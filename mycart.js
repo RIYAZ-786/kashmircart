@@ -1,76 +1,53 @@
 
-const track = document.querySelector('.carousel-track');
-const slides = document.querySelectorAll('.carousel-track img');
-let index = 0;
+    // Carousel
+    const track = document.querySelector('.carousel-track');
+    let slideIndex = 0;
 
-function slide() {
-index++;
-if (index >= slides.length) index = 0;
-track.style.transform = `translateX(-${1500 * index}px)`;
-}
+    function moveCarousel() {
+      slideIndex = (slideIndex + 1) % 2;
+      track.style.transform = `translateX(-${slideIndex * 100}%)`;
+    }
 
-setInterval(slide, 3000);
+    setInterval(moveCarousel, 4000);
 
+    // Search toggle
+    const searchBtn = document.getElementById('search-btn');
+    const searchInput = document.getElementById('search-input');
 
-document.addEventListener("DOMContentLoaded", function () {
-    const productsLink = document.getElementById("products-link");
-    const productsSection = document.getElementById("products");
-
-    productsLink.addEventListener("click", function (event) {
-        event.preventDefault();
-        productsSection.scrollIntoView({ behavior:"smooth" });
+    searchBtn.addEventListener('click', () => {
+      searchInput.style.display = searchInput.style.display === 'block' ? 'none' : 'block';
     });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const productsLink = document.getElementById("review-link");
-    const productsSection = document.getElementById("review");
-
-    productsLink.addEventListener("click", function (event) {
-        event.preventDefault();
-        productsSection.scrollIntoView({ behavior: "smooth" });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const productsLink = document.getElementById("contact-link");
-    const productsSection = document.getElementById("contact");
-
-    productsLink.addEventListener("click", function (event) {
-        event.preventDefault();
-        productsSection.scrollIntoView({ behavior: "smooth" });
-    });
-});
-
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const productsLink = document.getElementById("home-link");
-    const productsSection = document.getElementById("home");
-
-    productsLink.addEventListener("click", function (event) {
-        event.preventDefault();
-        productsSection.scrollIntoView({ behavior:"smooth" });
-    });
-});
-
 
     document.addEventListener("DOMContentLoaded", function () {
-        const searchBtn = document.getElementById("search-btn");
-        const searchInput = document.getElementById("search-input");
-
-        searchBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent body click from immediately hiding it
-            searchInput.style.display = searchInput.style.display === "block" ? "none" : "block";
-            if (searchInput.style.display === "block") {
-                searchInput.focus();
-            }
+      const products = document.querySelectorAll(".all_products");
+      const productsPerPage = 6;
+      const totalPages = Math.ceil(products.length / productsPerPage);
+      const pagination = document.getElementById("pagination");
+  
+      function showPage(page) {
+        products.forEach((product, index) => {
+          product.style.display =
+            index >= (page - 1) * productsPerPage && index < page * productsPerPage
+              ? "block"
+              : "none";
         });
-
-        // Hide the input when clicking outside
-        document.addEventListener("click", () => {
-            searchInput.style.display = "none";
-        });
+      }
+  
+      function createPagination() {
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.innerText = i;
+          btn.classList.add("page-btn");
+          btn.addEventListener("click", () => {
+            showPage(i);
+            document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+          pagination.appendChild(btn);
+        }
+      }
+  
+      createPagination();
+      showPage(1); // Initial page
+      document.querySelector(".page-btn").classList.add("active");
     });
-
